@@ -12,12 +12,10 @@ $ npm install sqlm
 ## usage
 
 ```js
-
-/**
- * @param {Function} query - called when attempting to query database
- */
-
-function sqlm (query) { ... }
+var sqlm = require('sqlm')
+var User = sqlm(function (query, params, done) {
+  // query database
+});
 ```
 
 ## example
