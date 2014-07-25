@@ -1,0 +1,34 @@
+{
+  "name": "sqlm",
+  "version": "0.0.1",
+  "description": "Modelize SQL queries with key to parameter bindings",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [
+    "sql",
+    "model",
+    "parameter",
+    "binding"
+  ],
+  "author": "Joseph Werle <joseph.werle@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ware": "^0.3.0"
+  },
+  "devDependencies": {
+    "batch": "^0.5.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwerle/sqlm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jwerle/sqlm/issues"
+  },
+  "homepage": "https://github.com/jwerle/sqlm"
+}
