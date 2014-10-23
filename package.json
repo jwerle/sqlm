@@ -1,6 +1,6 @@
 {
   "name": "sqlm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Modelize SQL queries with key to parameter bindings",
   "main": "index.js",
   "scripts": {
