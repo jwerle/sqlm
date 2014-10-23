@@ -57,8 +57,13 @@ Model.prototype.exec = function (sql, params, done) {
  */
 
 Model.prototype.bind = function (name, map, sql) {
-  var binding = new Binding(map, String(sql), this.query.bind(this));
-  var filters = this.filters;
+  var binding = null;
+  var filters = null;
+  if ('function' == typeof this[name]) {
+    throw new Error("binding already defined");
+  }
+  binding = new Binding(map, String(sql), this.query.bind(this));
+  filters = this.filters;
   this.bindings[name] = binding;
   this[name] = function (o, fn) {
     // object with callback
@@ -123,6 +128,13 @@ function Binding (map, sql, query) {
     return new Binding(map, sql);
   }
 
+  if (Array.isArray(map)) {
+    map = map.reduce(function (p, c, i) {
+      p[c] = i;
+      return p;
+    }, {});
+  }
+
   this.map = map;
   this.sql = sql;
   this._query = query;
@@ -154,6 +166,19 @@ Binding.prototype.query = function (data, fn) {
 };
 
 /**
+ * Set default values
+ *
+ * @api public
+ * @param {String} property
+ * @param {Mixed} value
+ */
+
+Binding.prototype.default = function (property, value) {
+  this.defaults[property] = value;
+  return this;
+};
+
+/**
  * Builds SQL parameters
  *
  * @api public
@@ -162,14 +187,17 @@ Binding.prototype.query = function (data, fn) {
 
 Binding.prototype.params = function (data) {
   var map = this.map;
-  return params = (
-    Object.keys(map)
-    .map(function (k) { return {key: k, value: String(map[k])}; })
-    .filter(function (_) { return /\$?[0-9]+/.test(_.value); })
-    .map(function (_) { return {key: _.key, value: _.value.replace(/\$/, '')}; })
-    .sort(function (a, b) { return a.value < b.value ? -1 : a.value == b.value ? 0 : 1; })
-    .map(function (_) { return data[_.key]; })
-    .map(function (v) { return v || null; })
-  );
+  var params = [];
+  Object.keys(map).forEach(function (key) {
+    var i = map[key];
+    params[i] = key;
+  });
+  return params.filter(Boolean).map(function (k) {
+    if ('undefined' == typeof data[k]) {
+      return null;
+    } else {
+      return data[k];
+    }
+  });
 };
 
